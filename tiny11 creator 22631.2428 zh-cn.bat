@@ -41,17 +41,17 @@ cls
 echo Getting image information:
 dism /Get-WimInfo /wimfile:d:\tiny11\sources\install.wim
 set index=
-set /p index=ÇëÊäÈëÓ³ÏñË÷Òý:
+set /p index=è¯·è¾“å…¥æ˜ åƒç´¢å¼•:
 set "index=%index%"
-echo ÕýÔÚ¹ÒÔØ Windows Ó³Ïñ...
+echo æ­£åœ¨æŒ‚è½½ Windows æ˜ åƒ...
 echo.
 md d:\scratchdir
 dism /mount-image /imagefile:d:\tiny11\sources\install.wim /index:%index% /mountdir:d:\scratchdir
-if not %errorlevel%==0 echo.&echo ¹ÒÔØÓ³Ïñ´íÎó£¬Çë°´ÈÎÒâ¼üÍË³ö¡£&pause>nul&exit
+if not %errorlevel%==0 echo.&echo æŒ‚è½½æ˜ åƒé”™è¯¯ï¼Œè¯·æŒ‰ä»»æ„é”®é€€å‡ºã€‚&pause>nul&exit
 echo Mounting complete! Performing removal of applications...
 
 :RemoveWindowsApps
-REM ±£ÁôµÄWindows AppsÁÐ±í
+REM ä¿ç•™çš„Windows Appsåˆ—è¡¨
 set "AppNames="
 set "AppNames=!AppNames! Microsoft.DesktopAppInstaller"
 set "AppNames=!AppNames! Microsoft.Paint"
@@ -72,17 +72,17 @@ set "AppNames=!AppNames! Microsoft.BingWeather"
 set "AppNames=!AppNames! Microsoft.PowerAutomateDesktop"
 
 echo.
-echo ========= µÈ´ýÒÆ³ý Windows Apps ³ÌÐò°ü =========
+echo ========= ç­‰å¾…ç§»é™¤ Windows Apps ç¨‹åºåŒ… =========
 for /f "tokens=3" %%i in ('dism /image:d:\scratchdir /Get-ProvisionedAppxPackages^|findstr /v /i "!AppNames!"^|findstr /i "Package"') do (
 	echo.
-	echo ÕýÔÚÒÆ³ý³ÌÐò°ü: %%i
+	echo æ­£åœ¨ç§»é™¤ç¨‹åºåŒ…: %%i
 	dism /image:d:\scratchdir /Remove-ProvisionedAppxPackage /PackageName:%%i
 )
 sleep 2
 cls
 
 :RemoveSystemApps
-REM ´ýÒÆ³ýµÄSystem AppsÁÐ±í
+REM å¾…ç§»é™¤çš„System Appsåˆ—è¡¨
 set AppNames=
 set AppNames=!AppNames! InternetExplorer
 set AppNames=!AppNames! LA57
@@ -92,24 +92,24 @@ set AppNames=!AppNames! MediaPlayer
 set AppNames=!AppNames! TabletPCMath
 set AppNames=!AppNames! Wallpaper
 
-echo ========= µÈ´ýÒÆ³ý System Apps =========
+echo ========= ç­‰å¾…ç§»é™¤ System Apps =========
 for /f "tokens=3" %%i in ('dism /image:d:\scratchdir /Get-Packages ^| findstr /i "!AppNames!" ^| findstr /v "zh-CN wow"') do (
 	dism /image:d:\scratchdir /Remove-Package /PackageName:%%i
 )
-echo ======== ÒÆ³ý System Apps Íê³É =========
+echo ======== ç§»é™¤ System Apps å®Œæˆ =========
 sleep 2
 cls
-echo ======== ÇåÀí System Apps °²×°Ä¿Â¼ ========
+echo ======== æ¸…ç† System Apps å®‰è£…ç›®å½• ========
 
 for /f "delims=" %%i in ('dir /b /ad "d:\scratchdir\*Files*"') do (
 	for /f "delims=" %%j in ('dir /b /ad "d:\scratchdir\%%i" ^|findstr /i "Internet Media"') do (
-		echo ÕýÔÚÉ¾³ýÄ¿Â¼ d:\scratchdir\%%i\%%j
+		echo æ­£åœ¨åˆ é™¤ç›®å½• d:\scratchdir\%%i\%%j
 		takeown /f "d:\scratchdir\%%i\%%j" /r >nul 2>&1
 		icacls "d:\scratchdir\%%i\%%j" /grant Administrators:F /T /C >nul 2>&1
 		rd "d:\scratchdir\%%i\%%j" /s /q
     )
 )
-echo ======== ÇåÀí System Apps °²×°Ä¿Â¼Íê³É ========
+echo ======== æ¸…ç† System Apps å®‰è£…ç›®å½•å®Œæˆ ========
 echo Removing OneDrive:
 takeown /f d:\scratchdir\Windows\System32\OneDriveSetup.exe >nul 2>&1
 icacls d:\scratchdir\Windows\System32\OneDriveSetup.exe /grant Administrators:F >nul 2>&1
